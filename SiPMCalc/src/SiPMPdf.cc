@@ -211,17 +211,21 @@ SiPMPdf::GeneralPoissonProb( const int    x,
     -TMath::LnGamma( x+1 ));
 }
 
-
+//This function calculates the whole fit by summing over all the peaks
 double
 SiPMPdf::evaluate() const
 {
-  double prob = gen_poisson( 0 ) * gauss_k( 0 );
+  double prob = gen_poisson( 0 ) * gauss_k( 0 ); //Initializing by starting with the 0th i.e. pedestal peak
 
-  for( int k = 1; k < mean+10 * TMath::Sqrt( mean )+15; ++k ){
+  for( int k = 1; k < mean+10 * TMath::Sqrt( mean )+15; ++k )//probk is the 'smearing' that is multiplied with each poisson peak and added
+  {
     double probk = binomial_prob( k, 0 ) * gauss_k( k );
+    //Adding the gaussian (calculated later) in the event of no afterpulse
+    //(This is indicated by the argument 0 out of k in the binomial_prob)
 
-    for( int i = 1; i <= k; ++i ){
-      probk += binomial_prob( k, i ) * ap_eff( k, i );
+    for( int i = 1; i <= k; ++i )
+    {
+      probk += binomial_prob( k, i ) * ap_eff( k, i ); //For non zero afterpulsed pixels, we combine with ap_eff instead of a gaussian
     }
 
     prob += gen_poisson( k ) * probk;
