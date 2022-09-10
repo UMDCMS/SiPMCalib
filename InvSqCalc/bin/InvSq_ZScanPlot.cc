@@ -211,7 +211,7 @@ FitAndShiftData( TGraph& data, TF1& func, double& ped, double& zoffset )
   zoffset = func.GetParameter( 0 );
   const double scale = func.GetParError( 0 ) / func.GetParError( 2 );
   func.FixParameter( 4, 1 / scale  );
-  func.SetParameter( 2, func.GetParameter( 2 ) *  scale );
+  func.SetParameter( 2, func.GetParameter( 2 ) *  scale ); //rescaling the L0 by the ratio of errors
 
   usr::log::PrintLog( usr::log::INFO, "Shifting the data for better plotting" );
 
